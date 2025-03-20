@@ -1667,3 +1667,156 @@ Base URL: `http://localhost:8080/api/v1`
     }
   }
   ```
+
+## Location & Weather
+
+### Update User Location
+- **URL**: `/api/v1/location`
+- **Method**: `POST`
+- **Request Body**:
+  ```json
+  {
+    "latitude": "float|required|between:-90,90",
+    "longitude": "float|required|between:-180,180",
+    "accuracy": "float|optional"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "weather": {
+        "temp": "float",
+        "condition": "string",
+        "humidity": "integer",
+        "description": "string"
+      },
+      "nearby_stores": [
+        {
+          "id": "uuid",
+          "name": "string",
+          "address": "string",
+          "distance": "float", // dalam kilometer
+          "eta": "string",
+          "is_open": "boolean",
+          "logo": "string|null",
+          "rating": "float|null",
+          "total_reviews": "integer",
+          "recommended_menus": [
+            {
+              "id": "uuid",
+              "name": "string",
+              "description": "string",
+              "price": "decimal",
+              "image": "string|null",
+              "is_available": "boolean",
+              "weather_match_score": "float" // 0-1, seberapa cocok dengan cuaca
+            }
+          ]
+        }
+      ],
+      "weather_based_recommendations": [
+        {
+          "id": "uuid",
+          "name": "string",
+          "description": "string",
+          "price": "decimal",
+          "image": "string|null",
+          "store": {
+            "id": "uuid",
+            "name": "string",
+            "distance": "float",
+            "eta": "string"
+          },
+          "weather_match_reason": "string"
+        }
+      ]
+    }
+  }
+  ```
+
+### Get Current Weather
+- **URL**: `/api/v1/weather`
+- **Method**: `GET`
+- **Query Parameters**:
+  ```json
+  {
+    "latitude": "float|required|between:-90,90",
+    "longitude": "float|required|between:-180,180"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "weather": {
+        "temp": "float",
+        "feels_like": "float",
+        "temp_min": "float",
+        "temp_max": "float",
+        "pressure": "integer",
+        "humidity": "integer",
+        "condition": "string",
+        "description": "string",
+        "icon": "string",
+        "wind": {
+          "speed": "float",
+          "deg": "integer"
+        },
+        "clouds": "integer",
+        "timestamp": "integer"
+      },
+      "location": {
+        "city": "string",
+        "country": "string",
+        "timezone": "integer"
+      }
+    }
+  }
+  ```
+
+### Get Weather Based Menu Recommendations
+- **URL**: `/api/v1/recommendations/weather`
+- **Method**: `GET`
+- **Query Parameters**:
+  ```json
+  {
+    "latitude": "float|required|between:-90,90",
+    "longitude": "float|required|between:-180,180",
+    "radius": "float|optional|default:5", // dalam kilometer
+    "limit": "integer|optional|default:10"
+  }
+  ```
+- **Response**:
+  ```json
+  {
+    "success": true,
+    "data": {
+      "weather": {
+        "temp": "float",
+        "condition": "string",
+        "humidity": "integer",
+        "description": "string"
+      },
+      "recommendations": [
+        {
+          "id": "uuid",
+          "name": "string",
+          "description": "string",
+          "price": "decimal",
+          "image": "string|null",
+          "weather_match_score": "float",
+          "weather_match_reason": "string",
+          "store": {
+            "id": "uuid",
+            "name": "string",
+            "distance": "float",
+            "eta": "string"
+          }
+        }
+      ]
+    }
+  }
+  ```

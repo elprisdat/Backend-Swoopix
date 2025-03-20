@@ -9,6 +9,8 @@ use App\Http\Controllers\Api\V1\OrderController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\VoucherController;
 use App\Http\Controllers\Api\V1\OrderItemController;
+use App\Http\Controllers\Api\V1\LocationController;
+use App\Http\Controllers\Api\V1\WeatherController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,6 +31,11 @@ Route::prefix('v1')->group(function () {
     Route::post('/login', [UserController::class, 'login']);
     Route::get('/profile', [UserController::class, 'profile']);
     Route::post('/logout', [UserController::class, 'logout']);
+
+    // Location & Weather Routes
+    Route::post('/location', [LocationController::class, 'updateLocation']);
+    Route::get('/weather', [WeatherController::class, 'getCurrentWeather']);
+    Route::get('/recommendations/weather', [WeatherController::class, 'getWeatherBasedRecommendations']);
 
     // Category Routes
     Route::get('/categories', [CategoryController::class, 'index']);
