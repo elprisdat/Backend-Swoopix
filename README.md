@@ -97,6 +97,102 @@ Swoopix adalah aplikasi pemesanan makanan yang memungkinkan pengguna untuk:
    - Validasi penggunaan voucher
    - Perhitungan diskon
 
+## Flow Aplikasi
+
+### 1. Deteksi Lokasi & Rekomendasi Menu
+
+```mermaid
+sequenceDiagram
+    participant User
+    participant Mobile App
+    participant Backend
+    participant OpenWeather
+    participant Store DB
+
+    User->>Mobile App: Buka Aplikasi
+    Mobile App->>User: Minta izin akses lokasi
+    User->>Mobile App: Berikan izin
+    Mobile App->>Mobile App: Get koordinat GPS
+    Mobile App->>Backend: Send koordinat (lat, long)
+    Backend->>OpenWeather: Request data cuaca
+    OpenWeather->>Backend: Response data cuaca
+    Backend->>Store DB: Query toko terdekat
+    Backend->>Backend: Generate rekomendasi menu
+    Backend->>Mobile App: Response dengan:
+    Note right of Mobile App: - Daftar toko terdekat<br/>- Rekomendasi menu<br/>- Info cuaca
+    Mobile App->>User: Tampilkan hasil
+```
+
+#### Detail Flow:
+
+1. **Permintaan Izin Lokasi**
+   - Saat pertama kali membuka app, user diminta izin akses lokasi
+   - App menggunakan GPS/Location Service untuk mendapatkan koordinat
+   - Koordinat disimpan dan diperbarui secara periodik
+
+2. **Pengiriman Data ke Backend**
+   ```json
+   POST /api/v1/location
+   {
+     "latitude": -7.123456,
+     "longitude": 112.789012,
+     "accuracy": 10.0
+   }
+   ```
+
+3. **Proses di Backend**
+   - Data lokasi diterima
+   - Request ke OpenWeather API untuk data cuaca
+   - Query database untuk toko dalam radius tertentu
+   - Generate rekomendasi berdasarkan:
+     * Kondisi cuaca (suhu, kelembaban, curah hujan)
+     * Waktu (pagi/siang/malam)
+     * Jarak toko ke user
+
+4. **Response ke Mobile App**
+   ```json
+   {
+     "weather": {
+       "temp": 30.5,
+       "condition": "sunny",
+       "humidity": 75
+     },
+     "nearby_stores": [
+       {
+         "id": "store-123",
+         "name": "Toko A",
+         "distance": 0.5,
+         "eta": "5 mins"
+       }
+     ],
+     "recommendations": [
+       {
+         "id": "menu-456",
+         "name": "Es Teh",
+         "reason": "Cuaca panas, cocok untuk minuman dingin"
+       }
+     ]
+   }
+   ```
+
+### 2. Update Lokasi Real-time
+
+1. **Background Location Updates**
+   - App melakukan update lokasi setiap:
+     * User berpindah lebih dari 100 meter
+     * Interval waktu 5 menit
+     * User melakukan pull-to-refresh
+
+2. **Geofencing**
+   - Notifikasi ketika user memasuki area toko
+   - Alert promo/menu spesial toko terdekat
+   - Perhitungan ulang rekomendasi menu
+
+3. **Optimisasi Battery & Data**
+   - Penggunaan GPS dioptimalkan
+   - Caching data lokasi & cuaca
+   - Batasan minimum perpindahan untuk update
+
 ## Instalasi
 
 1. Clone repository
