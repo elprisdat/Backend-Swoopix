@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Store extends Model
 {
@@ -14,48 +15,72 @@ class Store extends Model
     protected $fillable = [
         'name',
         'address',
+        'phone',
+        'email',
+        'description',
         'latitude',
         'longitude',
-        'opening_hour',
-        'closing_hour',
-        'is_active',
+        'open_time',
+        'close_time',
+        'is_open'
     ];
 
     protected $casts = [
-        'latitude' => 'decimal:8',
-        'longitude' => 'decimal:8',
-        'is_active' => 'boolean',
-        'opening_hour' => 'datetime:H:i',
-        'closing_hour' => 'datetime:H:i',
+        'is_open' => 'boolean',
+        'latitude' => 'float',
+        'longitude' => 'float'
     ];
+
+    public function menus()
+    {
+        return $this->hasMany(Menu::class);
+    }
 
     public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    public function scopeActive($query)
+    // Mencari toko dalam radius tertentu (km)
+    public static function findNearby($latitude, $longitude, $radius = 5)
     {
-        return $query->where('is_active', true);
+        // Menggunakan Haversine formula untuk menghitung jarak
+        $haversine = "(
+            6371 * acos(
+                cos(radians($latitude)) 
+                * cos(radians(latitude))
+                * cos(radians(longitude) - radians($longitude))
+                + sin(radians($latitude))
+                * sin(radians(latitude))
+            )
+        )";
+
+        return self::select('*')
+            ->selectRaw("{$haversine} AS distance")
+            ->whereRaw("{$haversine} < ?", [$radius])
+            ->orderBy('distance')
+            ->where('is_open', true)
+            ->with(['menus' => function($query) {
+                $query->where('is_available', true);
+            }])
+            ->get();
     }
 
-    public function scopeNearby($query, $latitude, $longitude, $radius = 5)
+    // Mendapatkan toko yang buka
+    public static function getOpenStores()
     {
-        return $query->selectRaw('*, 
-            (6371 * acos(cos(radians(?)) * cos(radians(latitude)) * 
-            cos(radians(longitude) - radians(?)) + 
-            sin(radians(?)) * sin(radians(latitude)))) AS distance', 
-            [$latitude, $longitude, $latitude])
-            ->having('distance', '<=', $radius)
-            ->orderBy('distance');
+        return self::where('is_open', true)
+            ->with(['menus' => function($query) {
+                $query->where('is_available', true);
+            }])
+            ->get();
     }
 
-    public function isOpen(): bool
+    // Mendapatkan detail toko dengan menu yang tersedia
+    public function getStoreWithAvailableMenus()
     {
-        $now = now();
-        $openingTime = \Carbon\Carbon::createFromTimeString($this->opening_hour);
-        $closingTime = \Carbon\Carbon::createFromTimeString($this->closing_hour);
-        
-        return $now->between($openingTime, $closingTime);
+        return $this->load(['menus' => function($query) {
+            $query->where('is_available', true);
+        }]);
     }
 }

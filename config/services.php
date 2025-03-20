@@ -35,4 +35,19 @@ return [
         ],
     ],
 
+    'tripay' => [
+        'api_key' => env('TRIPAY_API_KEY'),
+        'private_key' => env('TRIPAY_PRIVATE_KEY'),
+        'merchant_code' => env('TRIPAY_MERCHANT_CODE'),
+        'sandbox' => env('TRIPAY_SANDBOX', true),
+    ],
+
+    'fonnte' => [
+        'api_key' => env('FONNTE_API_KEY'),
+    ],
+
+    'openweather' => [
+        'api_key' => env('OPENWEATHER_API_KEY'),
+    ],
+
 ];

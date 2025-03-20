@@ -13,17 +13,18 @@ return new class extends Migration
     {
         Schema::create('payments', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->uuid('order_id');
+            $table->foreignUuid('order_id')->constrained()->onDelete('cascade');
             $table->string('reference_id')->unique();
-            $table->string('payment_method');
             $table->decimal('amount', 10, 2);
-            $table->string('payment_url')->nullable();
+            $table->string('method');
             $table->enum('status', ['pending', 'paid', 'failed', 'expired'])->default('pending');
+            $table->string('token')->unique();
+            $table->string('url')->nullable();
             $table->json('payment_details')->nullable();
+            $table->timestamp('expired_at');
+            $table->timestamp('paid_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
-
-            $table->foreign('order_id')->references('id')->on('orders')->onDelete('cascade');
         });
     }
 

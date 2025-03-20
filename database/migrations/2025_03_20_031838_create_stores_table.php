@@ -14,12 +14,16 @@ return new class extends Migration
         Schema::create('stores', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('name');
-            $table->text('address');
-            $table->decimal('latitude', 10, 8);
-            $table->decimal('longitude', 11, 8);
-            $table->time('opening_hour');
-            $table->time('closing_hour');
-            $table->boolean('is_active')->default(true);
+            $table->text('description')->nullable();
+            $table->string('address')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('logo')->nullable();
+            $table->decimal('latitude', 10, 8)->nullable();
+            $table->decimal('longitude', 11, 8)->nullable();
+            $table->time('open_time')->nullable();
+            $table->time('close_time')->nullable();
+            $table->boolean('is_open')->default(false);
             $table->timestamps();
             $table->softDeletes();
         });
