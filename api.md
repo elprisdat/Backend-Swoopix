@@ -20,7 +20,7 @@ Base URL: `http://localhost:8080/api/v1`
   ```json
   {
     "success": true,
-    "message": "Berhasil mendaftar, silahkan verifikasi OTP",
+    "message": "Berhasil mendaftar, silahkan verifikasi OTP yang dikirim ke WhatsApp Anda",
     "data": {
       "user": {
         "id": "uuid",
@@ -31,7 +31,7 @@ Base URL: `http://localhost:8080/api/v1`
         "created_at": "timestamp",
         "updated_at": "timestamp"
       },
-      "otp": "string" // only in development
+      "otp": "string" // only in debug mode
     }
   }
   ```
@@ -1168,7 +1168,8 @@ Base URL: `http://localhost:8080/api/v1`
       }
     ],
     "voucher_id": "string|optional",
-    "notes": "string|optional"
+    "notes": "string|optional",
+    "payment_method": "string|required"
   }
   ```
 - **Response**:
@@ -1178,62 +1179,21 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Pesanan berhasil dibuat",
     "data": {
       "order": {
+        // Order object like in Get Order Detail
+      },
+      "payment": {
         "id": "string",
-        "user_id": "string",
-        "store_id": "string",
-        "voucher_id": "string|null",
-        "total_price": "decimal",
-        "discount_amount": "decimal",
-        "final_price": "decimal",
-        "status": "pending",
-        "payment_status": "unpaid",
-        "payment_method": null,
-        "payment_url": null,
-        "payment_token": null,
-        "expired_at": "timestamp",
-        "paid_at": null,
-        "cancelled_at": null,
-        "completed_at": null,
-        "notes": "string|null",
-        "created_at": "timestamp",
-        "updated_at": "timestamp",
-        "store": {
-          "id": "string",
-          "name": "string",
-          "address": "string|null",
-          "phone": "string|null",
-          "email": "string|null",
-          "logo": "string|null",
-          "description": "string|null",
-          "open_time": "time|null",
-          "close_time": "time|null",
-          "is_open": "boolean",
-          "created_at": "timestamp",
-          "updated_at": "timestamp"
+        "order_id": "string",
+        "reference_id": "string",
+        "payment_method": "string",
+        "amount": "decimal",
+        "payment_url": "string",
+        "status": "string",
+        "payment_details": {
+          // Payment details from Tripay
         },
-        "items": [
-          {
-            "id": "integer",
-            "order_id": "string",
-            "menu_id": "string",
-            "quantity": "integer",
-            "price": "decimal",
-            "subtotal": "decimal",
-            "created_at": "timestamp",
-            "updated_at": "timestamp",
-            "menu": {
-              "id": "string",
-              "name": "string",
-              "description": "string|null",
-              "price": "decimal",
-              "category_id": "integer",
-              "image": "string|null",
-              "is_available": "boolean",
-              "created_at": "timestamp",
-              "updated_at": "timestamp"
-            }
-          }
-        ]
+        "created_at": "timestamp",
+        "updated_at": "timestamp"
       }
     }
   }

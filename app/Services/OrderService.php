@@ -7,6 +7,8 @@ use App\Repositories\OrderItemRepository;
 use App\Repositories\MenuRepository;
 use App\Repositories\VoucherRepository;
 use Illuminate\Support\Facades\DB;
+use App\Services\TripayService;
+use App\Services\FontteService;
 
 class OrderService extends BaseService
 {
@@ -14,18 +16,24 @@ class OrderService extends BaseService
     protected $orderItemRepository;
     protected $menuRepository;
     protected $voucherRepository;
+    protected $tripayService;
+    protected $fontteService;
 
     public function __construct(
         OrderRepository $orderRepository,
         OrderItemRepository $orderItemRepository,
         MenuRepository $menuRepository,
-        VoucherRepository $voucherRepository
+        VoucherRepository $voucherRepository,
+        TripayService $tripayService,
+        FontteService $fontteService
     ) {
         parent::__construct($orderRepository);
         $this->orderRepository = $orderRepository;
         $this->orderItemRepository = $orderItemRepository;
         $this->menuRepository = $menuRepository;
         $this->voucherRepository = $voucherRepository;
+        $this->tripayService = $tripayService;
+        $this->fontteService = $fontteService;
     }
 
     public function getOrdersByUser($userId): array
@@ -112,28 +120,40 @@ class OrderService extends BaseService
             }
 
             // Create order
-            $orderData = [
+            $order = $this->orderRepository->create([
                 'user_id' => $data['user_id'],
                 'store_id' => $data['store_id'],
                 'voucher_id' => $data['voucher_id'] ?? null,
                 'total_price' => $totalPrice,
-                'discount_amount' => $discountAmount,
+                'discount_amount' => $discountAmount ?? 0,
                 'final_price' => $totalPrice - $discountAmount,
-                'status' => 'pending',
-                'payment_status' => 'unpaid',
                 'notes' => $data['notes'] ?? null,
-                'expired_at' => now()->addHours(1)
-            ];
-
-            $order = $this->orderRepository->create($orderData);
+                'status' => 'pending',
+                'payment_status' => 'pending'
+            ]);
 
             // Create order items
             foreach ($items as $item) {
-                $this->orderItemRepository->create(array_merge(
-                    $item,
-                    ['order_id' => $order->id]
-                ));
+                $this->orderItemRepository->create([
+                    'order_id' => $order->id,
+                    'menu_id' => $item['menu_id'],
+                    'quantity' => $item['quantity'],
+                    'price' => $item['price']
+                ]);
             }
+
+            // Create payment using Tripay
+            $payment = $this->tripayService->createTransaction($order, $data['payment_method']);
+
+            // Send notifications
+            $store = $order->store;
+            $user = $order->user;
+
+            // Send notification to store
+            $this->fontteService->sendOrderNotification($store->phone, $order->toArray(), 'store');
+
+            // Send notification to user
+            $this->fontteService->sendOrderNotification($user->phone, $order->toArray(), 'user');
 
             DB::commit();
 
@@ -141,14 +161,16 @@ class OrderService extends BaseService
                 'success' => true,
                 'message' => 'Pesanan berhasil dibuat',
                 'data' => [
-                    'order' => $this->orderRepository->getOrderDetail($order->id)
+                    'order' => $order->load(['items.menu', 'store', 'user']),
+                    'payment' => $payment
                 ]
             ];
+
         } catch (\Exception $e) {
             DB::rollBack();
             return [
                 'success' => false,
-                'message' => $e->getMessage()
+                'message' => 'Gagal membuat pesanan: ' . $e->getMessage()
             ];
         }
     }

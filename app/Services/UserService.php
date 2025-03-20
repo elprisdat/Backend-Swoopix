@@ -5,15 +5,18 @@ namespace App\Services;
 use App\Repositories\UserRepository;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use App\Services\FontteService;
 
 class UserService extends BaseService
 {
     protected $userRepository;
+    protected $fontteService;
 
-    public function __construct(UserRepository $repository)
+    public function __construct(UserRepository $repository, FontteService $fontteService)
     {
         parent::__construct($repository);
         $this->userRepository = $repository;
+        $this->fontteService = $fontteService;
     }
 
     public function register(array $data): array
@@ -48,14 +51,17 @@ class UserService extends BaseService
             ];
         }
 
-        // TODO: Send OTP via SMS/WhatsApp
+        // Send OTP via WhatsApp
+        $otpSent = $this->fontteService->sendOTP($user->phone, $otp);
 
         return [
             'success' => true,
-            'message' => 'Berhasil mendaftar, silahkan verifikasi OTP',
+            'message' => $otpSent ? 
+                'Berhasil mendaftar, silahkan verifikasi OTP yang dikirim ke WhatsApp Anda' : 
+                'Berhasil mendaftar, tetapi gagal mengirim OTP. Silahkan hubungi admin.',
             'data' => [
                 'user' => $user,
-                'otp' => $otp // In production, remove this
+                'otp' => config('app.debug') ? $otp : null // Only show OTP in debug mode
             ]
         ];
     }
