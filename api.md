@@ -23,7 +23,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Berhasil mendaftar, silahkan verifikasi OTP",
     "data": {
       "user": {
-        "id": "string",
+        "id": "uuid",
         "name": "string",
         "email": "string|null",
         "phone": "string",
@@ -71,7 +71,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Login berhasil",
     "data": {
       "user": {
-        "id": "string",
+        "id": "uuid",
         "name": "string",
         "email": "string|null",
         "phone": "string",
@@ -93,7 +93,7 @@ Base URL: `http://localhost:8080/api/v1`
     "success": true,
     "data": {
       "user": {
-        "id": "string",
+        "id": "uuid",
         "name": "string",
         "email": "string|null",
         "phone": "string",
@@ -128,7 +128,7 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "categories": [
         {
-          "id": "integer",
+          "id": "uuid",
           "name": "string",
           "description": "string|null",
           "image": "string|null",
@@ -151,7 +151,7 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "categories": [
         {
-          "id": "integer",
+          "id": "uuid",
           "name": "string",
           "description": "string|null",
           "image": "string|null",
@@ -173,7 +173,7 @@ Base URL: `http://localhost:8080/api/v1`
     "success": true,
     "data": {
       "category": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "description": "string|null",
         "image": "string|null",
@@ -182,13 +182,14 @@ Base URL: `http://localhost:8080/api/v1`
         "updated_at": "timestamp",
         "menus": [
           {
-            "id": "integer",
+            "id": "uuid",
             "name": "string",
             "description": "string|null",
             "price": "decimal",
             "image": "string|null",
             "is_available": "boolean",
-            "category_id": "integer",
+            "category_id": "uuid",
+            "store_id": "uuid",
             "created_at": "timestamp",
             "updated_at": "timestamp"
           }
@@ -217,7 +218,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Kategori berhasil dibuat",
     "data": {
       "category": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "description": "string|null",
         "image": "string|null",
@@ -248,7 +249,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Kategori berhasil diupdate",
     "data": {
       "category": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "description": "string|null",
         "image": "string|null",
@@ -281,7 +282,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Status kategori berhasil diubah",
     "data": {
       "category": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "description": "string|null",
         "image": "string|null",
@@ -661,15 +662,17 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "stores": [
         {
-          "id": "integer",
+          "id": "uuid",
           "name": "string",
-          "address": "string|null",
-          "phone": "string|null",
+          "description": "string|null",
+          "address": "string",
+          "phone": "string",
           "email": "string|null",
           "logo": "string|null",
-          "description": "string|null",
-          "open_time": "time|null",
-          "close_time": "time|null",
+          "latitude": "decimal",
+          "longitude": "decimal",
+          "open_time": "time",
+          "close_time": "time",
           "is_open": "boolean",
           "created_at": "timestamp",
           "updated_at": "timestamp"
@@ -689,7 +692,7 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "stores": [
         {
-          "id": "integer",
+          "id": "uuid",
           "name": "string",
           "address": "string|null",
           "phone": "string|null",
@@ -723,7 +726,7 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "stores": [
         {
-          "id": "integer",
+          "id": "uuid",
           "name": "string",
           "address": "string|null",
           "phone": "string|null",
@@ -750,7 +753,7 @@ Base URL: `http://localhost:8080/api/v1`
     "success": true,
     "data": {
       "store": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "address": "string|null",
         "phone": "string|null",
@@ -761,7 +764,28 @@ Base URL: `http://localhost:8080/api/v1`
         "close_time": "time|null",
         "is_open": "boolean",
         "created_at": "timestamp",
-        "updated_at": "timestamp"
+        "updated_at": "timestamp",
+        "menus": [
+          {
+            "id": "uuid",
+            "name": "string",
+            "description": "string|null",
+            "price": "decimal",
+            "image": "string|null",
+            "is_available": "boolean",
+            "category_id": "uuid",
+            "store_id": "uuid",
+            "created_at": "timestamp",
+            "updated_at": "timestamp",
+            "category": {
+              "id": "uuid",
+              "name": "string",
+              "description": "string|null",
+              "image": "string|null",
+              "is_active": "boolean"
+            }
+          }
+        ]
       }
     }
   }
@@ -791,7 +815,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Toko berhasil dibuat",
     "data": {
       "store": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "address": "string|null",
         "phone": "string|null",
@@ -832,7 +856,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Toko berhasil diupdate",
     "data": {
       "store": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "address": "string|null",
         "phone": "string|null",
@@ -870,7 +894,7 @@ Base URL: `http://localhost:8080/api/v1`
     "message": "Status toko berhasil diubah",
     "data": {
       "store": {
-        "id": "integer",
+        "id": "uuid",
         "name": "string",
         "address": "string|null",
         "phone": "string|null",
@@ -906,7 +930,7 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "stores": [
         {
-          "id": "string",
+          "id": "uuid",
           "name": "string",
           "address": "string",
           "phone": "string",
@@ -920,11 +944,11 @@ Base URL: `http://localhost:8080/api/v1`
           "distance": "float", // dalam kilometer
           "menus": [
             {
-              "id": "string",
+              "id": "uuid",
               "name": "string",
               "description": "string",
               "price": "decimal",
-              "category_id": "string",
+              "category_id": "uuid",
               "is_available": "boolean"
             }
           ]
@@ -943,7 +967,7 @@ Base URL: `http://localhost:8080/api/v1`
 - **Query Parameters**:
   ```json
   {
-    "store_id": "integer|optional",
+    "store_id": "uuid|optional",
     "status": "string|optional"
   }
   ```
@@ -954,10 +978,10 @@ Base URL: `http://localhost:8080/api/v1`
     "data": {
       "orders": [
         {
-          "id": "string",
-          "user_id": "string",
-          "store_id": "string",
-          "voucher_id": "string|null",
+          "id": "uuid",
+          "user_id": "uuid",
+          "store_id": "uuid",
+          "voucher_id": "uuid|null",
           "total_price": "decimal",
           "discount_amount": "decimal",
           "final_price": "decimal",
@@ -974,7 +998,7 @@ Base URL: `http://localhost:8080/api/v1`
           "created_at": "timestamp",
           "updated_at": "timestamp",
           "store": {
-            "id": "string",
+            "id": "uuid",
             "name": "string",
             "address": "string|null",
             "phone": "string|null",
@@ -989,20 +1013,20 @@ Base URL: `http://localhost:8080/api/v1`
           },
           "items": [
             {
-              "id": "integer",
-              "order_id": "string",
-              "menu_id": "string",
+              "id": "uuid",
+              "order_id": "uuid",
+              "menu_id": "uuid",
               "quantity": "integer",
               "price": "decimal",
               "subtotal": "decimal",
               "created_at": "timestamp",
               "updated_at": "timestamp",
               "menu": {
-                "id": "string",
+                "id": "uuid",
                 "name": "string",
                 "description": "string|null",
                 "price": "decimal",
-                "category_id": "integer",
+                "category_id": "uuid",
                 "image": "string|null",
                 "is_available": "boolean",
                 "created_at": "timestamp",
@@ -1012,8 +1036,8 @@ Base URL: `http://localhost:8080/api/v1`
           ],
           "payment": [
             {
-              "id": "integer",
-              "order_id": "string",
+              "id": "uuid",
+              "order_id": "uuid",
               "amount": "decimal",
               "method": "string",
               "status": "string",
@@ -1040,10 +1064,10 @@ Base URL: `http://localhost:8080/api/v1`
     "success": true,
     "data": {
       "order": {
-        "id": "string",
-        "user_id": "string",
-        "store_id": "string",
-        "voucher_id": "string|null",
+        "id": "uuid",
+        "user_id": "uuid",
+        "store_id": "uuid",
+        "voucher_id": "uuid|null",
         "total_price": "decimal",
         "discount_amount": "decimal",
         "final_price": "decimal",
@@ -1060,7 +1084,7 @@ Base URL: `http://localhost:8080/api/v1`
         "created_at": "timestamp",
         "updated_at": "timestamp",
         "store": {
-          "id": "string",
+          "id": "uuid",
           "name": "string",
           "address": "string|null",
           "phone": "string|null",
@@ -1075,20 +1099,20 @@ Base URL: `http://localhost:8080/api/v1`
         },
         "items": [
           {
-            "id": "integer",
-            "order_id": "string",
-            "menu_id": "string",
+            "id": "uuid",
+            "order_id": "uuid",
+            "menu_id": "uuid",
             "quantity": "integer",
             "price": "decimal",
             "subtotal": "decimal",
             "created_at": "timestamp",
             "updated_at": "timestamp",
             "menu": {
-              "id": "string",
+              "id": "uuid",
               "name": "string",
               "description": "string|null",
               "price": "decimal",
-              "category_id": "integer",
+              "category_id": "uuid",
               "image": "string|null",
               "is_available": "boolean",
               "created_at": "timestamp",
@@ -1098,8 +1122,8 @@ Base URL: `http://localhost:8080/api/v1`
         ],
         "payment": [
           {
-            "id": "integer",
-            "order_id": "string",
+            "id": "uuid",
+            "order_id": "uuid",
             "amount": "decimal",
             "method": "string",
             "status": "string",
@@ -1112,6 +1136,7 @@ Base URL: `http://localhost:8080/api/v1`
           }
         ],
         "voucher": {
+          "id": "uuid",
           "id": "string",
           "code": "string",
           "type": "string",
