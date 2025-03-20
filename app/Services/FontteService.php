@@ -19,7 +19,7 @@ class FontteService
     public function sendOTP(string $phone, string $otp): bool
     {
         try {
-            $message = "Kode OTP Anda adalah: {$otp}\n\nKode ini berlaku selama 5 menit.\nJangan berikan kode ini kepada siapapun.";
+            $message = "Kode OTP Swoopix Anda adalah: {$otp}\n\nKode ini berlaku selama 5 menit.\nJangan berikan kode ini kepada siapapun.";
 
             $response = Http::withHeaders([
                 'Authorization' => $this->apiKey

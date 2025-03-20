@@ -1,66 +1,157 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Swoopix - Backend API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Swoopix adalah aplikasi pemesanan makanan yang dikembangkan sebagai bagian dari mata kuliah Pemrograman Aplikasi Mobile.
 
-## About Laravel
+## Tim Pengembang (Kelompok 1)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Vania Cahya (260)
+- Nurul Abdillah (449) 
+- Maha Aura (166)
+- Dy Aluna Dewanti Checylia (302)
+- M. Ariiq (154)
+- Muhammad Atqiyya (323)
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Dosen Pengampu
+Anita Safitri, S.Kom., M.Kom.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Tentang Aplikasi
 
-## Learning Laravel
+Swoopix adalah aplikasi pemesanan makanan yang memungkinkan pengguna untuk:
+- Melihat daftar menu dari berbagai toko
+- Melakukan pemesanan makanan
+- Mendapatkan rekomendasi menu berdasarkan cuaca
+- Mencari toko terdekat
+- Menggunakan voucher untuk mendapatkan diskon
+- Melakukan pembayaran melalui berbagai metode pembayaran
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## Fitur Unggulan 🌟
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 1. Rekomendasi Menu Berbasis Cuaca 🌦️
+- Integrasi dengan OpenWeather API untuk mendapatkan data cuaca real-time
+- Algoritma rekomendasi menu yang disesuaikan dengan kondisi cuaca
+- Personalisasi rekomendasi berdasarkan lokasi pengguna
+- Contoh: Merekomendasikan makanan hangat saat hujan atau minuman segar saat panas
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### 2. Payment Gateway Terintegrasi 💳
+- Integrasi dengan Tripay untuk berbagai metode pembayaran
+- Mendukung Virtual Account, E-Wallet, QRIS, dll
+- Notifikasi status pembayaran real-time
+- Sistem pembayaran yang aman dan terpercaya
 
-## Laravel Sponsors
+### 3. Verifikasi OTP via WhatsApp 📱
+- Sistem verifikasi pengguna menggunakan OTP
+- Integrasi dengan Fontte WhatsApp Gateway
+- Pengiriman OTP cepat dan reliable
+- Tingkat keamanan yang tinggi dalam proses registrasi
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 4. Integrasi Multi-API 🔄
+- OpenWeather API untuk data cuaca
+- Tripay API untuk payment gateway
+- Fontte API untuk WhatsApp gateway
+- Google Maps API untuk fitur lokasi
+- Semua API terintegrasi dalam satu sistem yang seamless
 
-### Premium Partners
+### 5. Fitur Lokasi Pintar 📍
+- Deteksi lokasi pengguna secara real-time
+- Pencarian toko terdekat berdasarkan radius
+- Perhitungan jarak dan estimasi waktu pengiriman
+- Rekomendasi toko berdasarkan lokasi pengguna
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+## Teknologi yang Digunakan
 
-## Contributing
+- Laravel 10 (Backend Framework)
+- MySQL (Database)
+- Tripay (Payment Gateway)
+- Fontte (WhatsApp Gateway)
+- OpenWeather API (Weather Data)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Fitur Utama
 
-## Code of Conduct
+1. Autentikasi
+   - Register dengan verifikasi OTP via WhatsApp
+   - Login
+   - Manajemen profil
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+2. Manajemen Menu
+   - CRUD menu
+   - Kategorisasi menu
+   - Rekomendasi menu berdasarkan cuaca
 
-## Security Vulnerabilities
+3. Manajemen Toko
+   - CRUD toko
+   - Pencarian toko terdekat
+   - Status buka/tutup toko
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+4. Sistem Pemesanan
+   - Pembuatan pesanan
+   - Notifikasi WhatsApp untuk toko dan pembeli
+   - Manajemen status pesanan
 
-## License
+5. Sistem Pembayaran
+   - Integrasi dengan Tripay
+   - Multiple payment methods
+   - Status pembayaran real-time
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+6. Sistem Voucher
+   - Manajemen voucher
+   - Validasi penggunaan voucher
+   - Perhitungan diskon
+
+## Instalasi
+
+1. Clone repository
+```bash
+git clone https://github.com/yourusername/swoopixbackend.git
+cd swoopixbackend
+```
+
+2. Install dependencies
+```bash
+composer install
+```
+
+3. Setup environment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
+
+4. Konfigurasi database di file .env
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=swoopix
+DB_USERNAME=root
+DB_PASSWORD=
+```
+
+5. Konfigurasi API keys di file .env
+```
+TRIPAY_API_KEY=your_tripay_api_key
+TRIPAY_PRIVATE_KEY=your_tripay_private_key
+TRIPAY_MERCHANT_CODE=your_tripay_merchant_code
+TRIPAY_SANDBOX=true
+
+FONTTE_API_KEY=your_fontte_api_key
+
+OPENWEATHER_API_KEY=your_openweather_api_key
+```
+
+6. Jalankan migrasi database
+```bash
+php artisan migrate
+```
+
+7. Jalankan server
+```bash
+php artisan serve
+```
+
+## API Documentation
+
+Dokumentasi API lengkap dapat dilihat di file [api.md](api.md)
+
+## Lisensi
+
+Hak Cipta © 2024 Kelompok 1 - Pemrograman Aplikasi Mobile
