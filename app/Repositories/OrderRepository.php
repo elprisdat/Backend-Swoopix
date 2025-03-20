@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Models\Models\Order;
+use App\Models\Order;
 
 class OrderRepository extends BaseRepository
 {
