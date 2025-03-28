@@ -20,13 +20,30 @@ class PaymentController extends Controller
     {
         try {
             $channels = $this->tripayService->getPaymentChannels();
+
+            if (empty($channels)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Tidak ada channel pembayaran yang tersedia'
+                ], 404);
+            }
+
+            // Format channels sesuai dengan interface PaymentChannel di frontend
+            $formattedChannels = array_map(function($channel) {
+                return [
+                    'code' => $channel['code'],
+                    'name' => $channel['name'],
+                    'icon_url' => $channel['icon_url'] ?? null,
+                    'description' => $channel['description'] ?? null
+                ];
+            }, $channels);
+
             return response()->json([
                 'success' => true,
-                'data' => [
-                    'payment_channels' => $channels
-                ]
+                'data' => $formattedChannels
             ]);
         } catch (\Exception $e) {
+            \Log::error('Payment channels error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => 'Gagal mendapatkan channel pembayaran: ' . $e->getMessage()

@@ -43,4 +43,29 @@ class Store extends Model
     {
         return $this->hasMany(Order::class);
     }
+
+    // Mencari toko dalam radius tertentu (km)
+    public static function findNearby($latitude, $longitude, $radius = 5)
+    {
+        // Menggunakan Haversine formula untuk menghitung jarak
+        $haversine = "(
+            6371 * acos(
+                cos(radians($latitude)) 
+                * cos(radians(latitude))
+                * cos(radians(longitude) - radians($longitude))
+                + sin(radians($latitude))
+                * sin(radians(latitude))
+            )
+        )";
+
+        return self::select('*')
+            ->selectRaw("{$haversine} AS distance")
+            ->whereRaw("{$haversine} < ?", [$radius])
+            ->orderBy('distance')
+            ->where('is_open', true)
+            ->with(['menus' => function($query) {
+                $query->where('is_available', true);
+            }])
+            ->get();
+    }
 }

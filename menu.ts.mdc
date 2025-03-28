@@ -1,0 +1,379 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+
+// Base URL API
+const API_BASE_URL = 'http://10.0.2.2:8000/api/v1';
+
+// Interfaces
+export interface Category {
+  id: string;
+  name: string;
+  description: string | null;
+  image: string | null;
+  is_active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface MenuItem {
+  name: string;
+  description: string | null;
+}
+
+export interface OrderItem {
+  menu_id: string;
+  quantity: number;
+  notes?: string;
+}
+
+export interface OrderItemResponse {
+  id: string;
+  menu_id: string;
+  quantity: number;
+  price: number;
+  subtotal: number;
+  notes?: string;
+  menu: MenuItem;
+}
+
+export interface Order {
+  id: string;
+  store_id: string;
+  user_id: string;
+  total_amount: number;
+  final_price: number;
+  status: string;
+  notes?: string;
+  created_at: string;
+  items: OrderItemResponse[];
+}
+
+export interface Payment {
+  payment_method: string;
+  payment_url?: string;
+  status: string;
+  reference: string;
+  expired_time: string;
+}
+
+export interface OrderResponse {
+  order: Order;
+  payment: Payment;
+}
+
+export interface CreateOrderRequest {
+  store_id: string;
+  items: OrderItem[];
+  payment_method: string;
+  voucher_id?: string;
+  notes?: string;
+}
+
+export interface PaymentChannel {
+  code: string;
+  name: string;
+  icon_url?: string;
+  description?: string;
+}
+
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T;
+}
+
+// Helper untuk logging
+const logError = (message: string, error: any) => {
+  console.error(`[Menu Service Error] ${message}:`, error);
+};
+
+const logInfo = (message: string, data?: any) => {
+  console.log(`[Menu Service Info] ${message}`, data || '');
+};
+
+// Service methods
+export const menuService = {
+  // Get categories
+  getCategories: async (): Promise<Category[]> => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token tidak ditemukan');
+      }
+      
+      logInfo('Memulai fetch kategori');
+      
+      const response = await fetch(`${API_BASE_URL}/categories`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      logInfo('Status response kategori:', response.status);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token tidak valid atau expired');
+        } else if (response.status === 403) {
+          throw new Error('Tidak memiliki akses');
+        } else if (response.status === 404) {
+          throw new Error('Data tidak ditemukan');
+        } else if (response.status === 500) {
+          throw new Error('Terjadi kesalahan pada server');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      logInfo('Response kategori:', data);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Gagal memuat kategori');
+      }
+
+      if (!data.data?.categories || !Array.isArray(data.data.categories)) {
+        throw new Error('Format data kategori tidak valid');
+      }
+
+      return data.data.categories;
+    } catch (error) {
+      logError('Error saat memuat kategori', error);
+      throw error;
+    }
+  },
+
+  // Get menus with optional filters
+  getMenus: async (categoryId?: string, search?: string): Promise<MenuItem[]> => {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token tidak ditemukan');
+      }
+
+      logInfo('Memulai fetch menu', { categoryId, search });
+
+      let url = categoryId 
+        ? `${API_BASE_URL}/menus/category/${categoryId}`
+        : `${API_BASE_URL}/menus`;
+      
+      if (search) {
+        url = `${API_BASE_URL}/menus/search?query=${encodeURIComponent(search)}`;
+      }
+
+      logInfo('Fetching dari URL:', url);
+
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+          'Content-Type': 'application/json',
+        },
+      });
+
+      logInfo('Status response menu:', response.status);
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('Token tidak valid atau expired');
+        } else if (response.status === 403) {
+          throw new Error('Tidak memiliki akses');
+        } else if (response.status === 404) {
+          throw new Error('Data tidak ditemukan');
+        } else if (response.status === 500) {
+          throw new Error('Terjadi kesalahan pada server');
+        }
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      logInfo('Response data menu:', data);
+
+      if (!data.success) {
+        throw new Error(data.message || 'Gagal memuat menu');
+      }
+
+      if (!data.data?.menus || !Array.isArray(data.data.menus)) {
+        throw new Error('Format data menu tidak valid');
+      }
+
+      return data.data.menus;
+    } catch (error) {
+      logError('Error saat memuat menu', error);
+      throw error;
+    }
+  },
+
+  // Get payment channels
+  async getPaymentChannels(): Promise<PaymentChannel[]> {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token tidak ditemukan');
+      }
+
+      logInfo('Memulai fetch payment channels');
+      
+      const response = await axios.get<ApiResponse<PaymentChannel[]>>(`${API_BASE_URL}/payment-channels`, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Accept': 'application/json',
+        },
+      });
+
+      logInfo('Response payment channels:', response.data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Gagal memuat payment channels');
+      }
+
+      if (!Array.isArray(response.data.data)) {
+        throw new Error('Format data payment channels tidak valid');
+      }
+
+      // Validasi setiap payment channel
+      const validChannels = response.data.data.filter(channel => {
+        return channel && typeof channel === 'object' 
+          && typeof channel.code === 'string'
+          && typeof channel.name === 'string';
+      });
+
+      if (validChannels.length === 0) {
+        throw new Error('Tidak ada payment channel yang valid');
+      }
+
+      return validChannels;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        logInfo('Axios error response:', error.response?.data);
+        if (error.response?.status === 401) {
+          throw new Error('Token tidak valid atau expired');
+        } else if (error.response?.status === 403) {
+          throw new Error('Tidak memiliki akses');
+        } else if (error.response?.status === 404) {
+          throw new Error('Data payment channels tidak ditemukan');
+        } else if (error.response?.status === 500) {
+          throw new Error('Terjadi kesalahan pada server');
+        }
+      }
+      logError('Error saat mengambil payment channels', error);
+      throw error;
+    }
+  },
+
+  // Create order
+  async createOrder(orderData: CreateOrderRequest): Promise<ApiResponse<OrderResponse>> {
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (!token) {
+        throw new Error('Token tidak ditemukan');
+      }
+
+      // Validasi data sebelum dikirim
+      if (!orderData.store_id) {
+        throw new Error('store_id harus diisi');
+      }
+      
+      if (!orderData.items || orderData.items.length === 0) {
+        throw new Error('items tidak boleh kosong');
+      }
+
+      if (!orderData.payment_method) {
+        throw new Error('payment_method harus diisi');
+      }
+
+      // Validasi setiap item
+      orderData.items.forEach((item, index) => {
+        if (!item.menu_id) {
+          throw new Error(`menu_id pada item ke-${index + 1} harus diisi`);
+        }
+        if (typeof item.quantity !== 'number' || item.quantity < 1) {
+          throw new Error(`quantity pada item ke-${index + 1} harus lebih dari 0`);
+        }
+      });
+
+      // Format data sesuai dengan yang diharapkan backend
+      const requestBody = {
+        store_id: orderData.store_id,
+        items: orderData.items.map(item => ({
+          menu_id: item.menu_id,
+          quantity: item.quantity,
+          notes: item.notes || null
+        })),
+        payment_method: orderData.payment_method,
+        voucher_id: orderData.voucher_id || null,
+        notes: orderData.notes || null
+      };
+
+      logInfo('Mengirim request order dengan data:', requestBody);
+      
+      const response = await axios.post<ApiResponse<OrderResponse>>(
+        `${API_BASE_URL}/orders`, 
+        requestBody,
+        {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          }
+        }
+      );
+
+      logInfo('Response dari server:', response.data);
+
+      if (!response.data.success) {
+        throw new Error(response.data.message || 'Gagal membuat pesanan');
+      }
+
+      // Validasi response data
+      const orderResponse = response.data.data;
+      if (!orderResponse?.order?.id || !orderResponse?.payment?.payment_method) {
+        throw new Error('Format response tidak valid');
+      }
+
+      return response.data;
+    } catch (error: any) {
+      if (axios.isAxiosError(error)) {
+        logInfo('Detail error response:', error.response?.data);
+        
+        const errorMessage = error.response?.data?.message || error.message;
+        const statusCode = error.response?.status;
+
+        switch (statusCode) {
+          case 400:
+            throw new Error(`Data pesanan tidak valid: ${errorMessage}`);
+          case 401:
+            throw new Error('Token tidak valid atau expired');
+          case 403:
+            throw new Error('Tidak memiliki akses untuk membuat pesanan');
+          case 404:
+            throw new Error('Store atau menu tidak ditemukan');
+          case 422:
+            const validationErrors = error.response?.data?.errors;
+            if (validationErrors) {
+              const errorMessages = Object.values(validationErrors).flat().join(', ');
+              throw new Error(`Validasi gagal: ${errorMessages}`);
+            }
+            throw new Error(`Data tidak valid: ${errorMessage}`);
+          case 500:
+            logError('Server error details:', error.response?.data);
+            throw new Error('Terjadi kesalahan pada server. Silakan coba lagi nanti');
+          default:
+            throw new Error(`Terjadi kesalahan: ${errorMessage}`);
+        }
+      }
+
+      logError('Error tidak terduga saat membuat pesanan:', error);
+      throw new Error('Terjadi kesalahan saat membuat pesanan. Silakan coba lagi');
+    }
+  },
+};
+
+export default menuService; 

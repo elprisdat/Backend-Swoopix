@@ -40,6 +40,66 @@ class CategorySeeder extends Seeder
                 'name' => 'Paket Hemat',
                 'description' => 'Kombinasi menu dengan harga spesial',
                 'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Masakan Nusantara',
+                'description' => 'Berbagai masakan khas Indonesia',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Masakan Oriental',
+                'description' => 'Menu masakan Asia Timur dan Tenggara',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Western Food',
+                'description' => 'Hidangan ala barat',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Seafood',
+                'description' => 'Aneka hidangan laut',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Vegetarian',
+                'description' => 'Menu khusus vegetarian',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Kopi dan Teh',
+                'description' => 'Berbagai jenis kopi dan teh',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Juice & Smoothies',
+                'description' => 'Minuman segar dari buah dan sayur',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Sarapan',
+                'description' => 'Menu spesial untuk sarapan',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Menu Sehat',
+                'description' => 'Pilihan makanan sehat dan bergizi',
+                'is_active' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Menu Anak',
+                'description' => 'Menu khusus untuk anak-anak',
+                'is_active' => true
             ]
         ];
 

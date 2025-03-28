@@ -12,7 +12,11 @@ class WeatherService
 
     public function __construct()
     {
-        $this->apiKey = config('services.openweather.api_key');
+        $apiKey = config('services.openweather.api_key');
+        if (!$apiKey) {
+            throw new \RuntimeException('OpenWeather API key tidak ditemukan. Silakan tambahkan OPENWEATHER_API_KEY di file .env');
+        }
+        $this->apiKey = $apiKey;
         $this->baseUrl = 'https://api.openweathermap.org/data/2.5';
     }
 

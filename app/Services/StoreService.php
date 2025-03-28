@@ -167,4 +167,18 @@ class StoreService extends BaseService
             ]
         ];
     }
+
+    public function getNearbyStores($latitude, $longitude, $radius = 10): array
+    {
+        $stores = $this->storeRepository->getNearbyStores($latitude, $longitude, $radius);
+
+        return [
+            'success' => true,
+            'message' => 'Daftar toko terdekat berhasil didapatkan',
+            'data' => [
+                'stores' => $stores,
+                'total' => count($stores)
+            ]
+        ];
+    }
 } 

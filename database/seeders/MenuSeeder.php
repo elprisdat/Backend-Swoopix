@@ -37,6 +37,34 @@ class MenuSeeder extends Seeder
                 'description' => 'Ayam bakar bumbu rempah khas',
                 'price' => 35000,
                 'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Sate Ayam',
+                'description' => 'Sate ayam dengan bumbu kacang',
+                'price' => 30000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Rendang Sapi',
+                'description' => 'Rendang sapi autentik Padang',
+                'price' => 45000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Ikan Bakar',
+                'description' => 'Ikan kembung bakar dengan sambal',
+                'price' => 40000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Sop Buntut',
+                'description' => 'Sop buntut sapi dengan kuah bening',
+                'price' => 50000,
+                'is_available' => true
             ]
         ];
 
@@ -62,6 +90,34 @@ class MenuSeeder extends Seeder
                 'description' => 'Teh lemon dingin',
                 'price' => 10000,
                 'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Es Kopi Susu',
+                'description' => 'Kopi susu dengan gula aren',
+                'price' => 18000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Smoothie Mangga',
+                'description' => 'Smoothie mangga dengan yogurt',
+                'price' => 20000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Green Tea Latte',
+                'description' => 'Green tea dengan susu',
+                'price' => 22000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Es Jeruk',
+                'description' => 'Jeruk peras segar',
+                'price' => 8000,
+                'is_available' => true
             ]
         ];
 
@@ -78,6 +134,34 @@ class MenuSeeder extends Seeder
                 'id' => Str::uuid(),
                 'name' => 'Pisang Goreng',
                 'description' => 'Pisang goreng crispy',
+                'price' => 10000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Dimsum Ayam',
+                'description' => 'Dimsum ayam kukus',
+                'price' => 18000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Roti Bakar',
+                'description' => 'Roti bakar dengan berbagai topping',
+                'price' => 15000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Cireng',
+                'description' => 'Cireng dengan bumbu rujak',
+                'price' => 12000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Tahu Crispy',
+                'description' => 'Tahu goreng crispy dengan sambal',
                 'price' => 10000,
                 'is_available' => true
             ]
@@ -98,6 +182,34 @@ class MenuSeeder extends Seeder
                 'description' => 'Pudding coklat lembut',
                 'price' => 8000,
                 'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Es Campur',
+                'description' => 'Es campur dengan berbagai topping',
+                'price' => 15000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Pisang Bakar',
+                'description' => 'Pisang bakar dengan keju dan coklat',
+                'price' => 18000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Martabak Manis',
+                'description' => 'Martabak manis dengan berbagai topping',
+                'price' => 25000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Es Teler',
+                'description' => 'Es teler dengan kelapa muda',
+                'price' => 15000,
+                'is_available' => true
             ]
         ];
 
@@ -115,6 +227,34 @@ class MenuSeeder extends Seeder
                 'name' => 'Paket Ayam Bakar',
                 'description' => 'Ayam bakar + nasi + es teh manis',
                 'price' => 38000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Paket Keluarga',
+                'description' => 'Ayam bakar + nasi goreng + 4 es teh manis',
+                'price' => 85000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Paket Mie Goreng',
+                'description' => 'Mie goreng + es jeruk',
+                'price' => 32000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Paket Hemat Sate',
+                'description' => 'Sate ayam + nasi + es teh manis',
+                'price' => 35000,
+                'is_available' => true
+            ],
+            [
+                'id' => Str::uuid(),
+                'name' => 'Paket Berdua',
+                'description' => '2 porsi nasi goreng + 2 es teh manis',
+                'price' => 45000,
                 'is_available' => true
             ]
         ];

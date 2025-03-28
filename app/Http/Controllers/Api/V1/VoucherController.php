@@ -11,7 +11,22 @@ class VoucherController extends Controller
 {
     public function index()
     {
-        $vouchers = Voucher::all();
+        $vouchers = Voucher::all()->map(function ($voucher) {
+            return [
+                'id' => $voucher->id,
+                'code' => $voucher->code,
+                'type' => $voucher->discount_type,
+                'value' => $voucher->discount_value,
+                'min_order' => $voucher->minimum_purchase,
+                'max_discount' => $voucher->max_discount,
+                'start_date' => $voucher->start_date,
+                'end_date' => $voucher->end_date,
+                'is_active' => $voucher->is_active,
+                'created_at' => $voucher->created_at,
+                'updated_at' => $voucher->updated_at
+            ];
+        })->toArray();
+        
         return response()->json([
             'success' => true,
             'data' => [
@@ -25,7 +40,22 @@ class VoucherController extends Controller
         $vouchers = Voucher::where('is_active', true)
             ->where('start_date', '<=', now())
             ->where('end_date', '>=', now())
-            ->get();
+            ->get()
+            ->map(function ($voucher) {
+                return [
+                    'id' => $voucher->id,
+                    'code' => $voucher->code,
+                    'type' => $voucher->discount_type,
+                    'value' => $voucher->discount_value,
+                    'min_order' => $voucher->minimum_purchase,
+                    'max_discount' => $voucher->max_discount,
+                    'start_date' => $voucher->start_date,
+                    'end_date' => $voucher->end_date,
+                    'is_active' => $voucher->is_active,
+                    'created_at' => $voucher->created_at,
+                    'updated_at' => $voucher->updated_at
+                ];
+            })->toArray();
 
         return response()->json([
             'success' => true,
@@ -45,10 +75,24 @@ class VoucherController extends Controller
             ], 404);
         }
 
+        $formattedVoucher = [
+            'id' => $voucher->id,
+            'code' => $voucher->code,
+            'type' => $voucher->discount_type,
+            'value' => $voucher->discount_value,
+            'min_order' => $voucher->minimum_purchase,
+            'max_discount' => $voucher->max_discount,
+            'start_date' => $voucher->start_date,
+            'end_date' => $voucher->end_date,
+            'is_active' => $voucher->is_active,
+            'created_at' => $voucher->created_at,
+            'updated_at' => $voucher->updated_at
+        ];
+
         return response()->json([
             'success' => true,
             'data' => [
-                'voucher' => $voucher
+                'voucher' => $formattedVoucher
             ]
         ]);
     }
@@ -74,13 +118,40 @@ class VoucherController extends Controller
             ], 422);
         }
 
-        $voucher = Voucher::create($request->all());
+        $data = [
+            'code' => $request->code,
+            'discount_type' => $request->type,
+            'discount_value' => $request->value,
+            'minimum_purchase' => $request->min_order,
+            'max_discount' => $request->max_discount,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->is_active ?? true,
+            'max_usage' => $request->max_usage ?? 0,
+            'used_count' => 0
+        ];
+
+        $voucher = Voucher::create($data);
+
+        $formattedVoucher = [
+            'id' => $voucher->id,
+            'code' => $voucher->code,
+            'type' => $voucher->discount_type,
+            'value' => $voucher->discount_value,
+            'min_order' => $voucher->minimum_purchase,
+            'max_discount' => $voucher->max_discount,
+            'start_date' => $voucher->start_date,
+            'end_date' => $voucher->end_date,
+            'is_active' => $voucher->is_active,
+            'created_at' => $voucher->created_at,
+            'updated_at' => $voucher->updated_at
+        ];
 
         return response()->json([
             'success' => true,
             'message' => 'Voucher berhasil dibuat',
             'data' => [
-                'voucher' => $voucher
+                'voucher' => $formattedVoucher
             ]
         ], 201);
     }
@@ -114,13 +185,38 @@ class VoucherController extends Controller
             ], 422);
         }
 
-        $voucher->update($request->all());
+        $data = [
+            'code' => $request->code,
+            'discount_type' => $request->type,
+            'discount_value' => $request->value,
+            'minimum_purchase' => $request->min_order,
+            'max_discount' => $request->max_discount,
+            'start_date' => $request->start_date,
+            'end_date' => $request->end_date,
+            'is_active' => $request->is_active
+        ];
+
+        $voucher->update($data);
+
+        $formattedVoucher = [
+            'id' => $voucher->id,
+            'code' => $voucher->code,
+            'type' => $voucher->discount_type,
+            'value' => $voucher->discount_value,
+            'min_order' => $voucher->minimum_purchase,
+            'max_discount' => $voucher->max_discount,
+            'start_date' => $voucher->start_date,
+            'end_date' => $voucher->end_date,
+            'is_active' => $voucher->is_active,
+            'created_at' => $voucher->created_at,
+            'updated_at' => $voucher->updated_at
+        ];
 
         return response()->json([
             'success' => true,
             'message' => 'Voucher berhasil diupdate',
             'data' => [
-                'voucher' => $voucher
+                'voucher' => $formattedVoucher
             ]
         ]);
     }
@@ -156,11 +252,25 @@ class VoucherController extends Controller
         $voucher->is_active = !$voucher->is_active;
         $voucher->save();
 
+        $formattedVoucher = [
+            'id' => $voucher->id,
+            'code' => $voucher->code,
+            'type' => $voucher->discount_type,
+            'value' => $voucher->discount_value,
+            'min_order' => $voucher->minimum_purchase,
+            'max_discount' => $voucher->max_discount,
+            'start_date' => $voucher->start_date,
+            'end_date' => $voucher->end_date,
+            'is_active' => $voucher->is_active,
+            'created_at' => $voucher->created_at,
+            'updated_at' => $voucher->updated_at
+        ];
+
         return response()->json([
             'success' => true,
             'message' => 'Status voucher berhasil diubah',
             'data' => [
-                'voucher' => $voucher
+                'voucher' => $formattedVoucher
             ]
         ]);
     }
@@ -193,25 +303,39 @@ class VoucherController extends Controller
             ], 404);
         }
 
-        if ($request->total_amount < $voucher->min_order) {
+        if ($request->total_amount < $voucher->minimum_purchase) {
             return response()->json([
                 'success' => false,
                 'message' => 'Total pesanan belum memenuhi minimum pembelian'
             ], 400);
         }
 
-        $discountAmount = $voucher->type === 'fixed' 
-            ? $voucher->value 
+        $discountAmount = $voucher->discount_type === 'fixed' 
+            ? $voucher->discount_value 
             : min(
-                ($request->total_amount * $voucher->value / 100),
+                ($request->total_amount * $voucher->discount_value / 100),
                 $voucher->max_discount ?? PHP_FLOAT_MAX
             );
 
+        $formattedVoucher = [
+            'id' => $voucher->id,
+            'code' => $voucher->code,
+            'type' => $voucher->discount_type,
+            'value' => $voucher->discount_value,
+            'min_order' => $voucher->minimum_purchase,
+            'max_discount' => $voucher->max_discount,
+            'start_date' => $voucher->start_date,
+            'end_date' => $voucher->end_date,
+            'is_active' => $voucher->is_active,
+            'created_at' => $voucher->created_at,
+            'updated_at' => $voucher->updated_at
+        ];
+        
         return response()->json([
             'success' => true,
             'message' => 'Voucher valid',
             'data' => [
-                'voucher' => $voucher,
+                'voucher' => $formattedVoucher,
                 'discount_amount' => $discountAmount
             ]
         ]);

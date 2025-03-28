@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
 
 class OrderItem extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes, HasUuids;
 
     protected $fillable = [
         'order_id',
@@ -22,6 +24,7 @@ class OrderItem extends Model
         'quantity' => 'integer',
         'price' => 'decimal:2',
         'subtotal' => 'decimal:2',
+        'id' => 'string'
     ];
 
     public function order()

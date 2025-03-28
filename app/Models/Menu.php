@@ -11,8 +11,9 @@ class Menu extends Model
 {
     use HasFactory, SoftDeletes, HasUuids;
 
+    protected $table = 'menus';
+
     protected $fillable = [
-        'id',
         'name',
         'description',
         'price',
@@ -25,6 +26,7 @@ class Menu extends Model
     protected $casts = [
         'price' => 'decimal:2',
         'is_available' => 'boolean',
+        'id' => 'string'
     ];
 
     public function category()

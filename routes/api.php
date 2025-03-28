@@ -72,12 +72,14 @@ Route::prefix('v1')->group(function () {
     });
 
     // Order Routes
-    Route::get('/orders', [OrderController::class, 'index']);
-    Route::get('/orders/{id}', [OrderController::class, 'show']);
-    Route::post('/orders', [OrderController::class, 'store']);
-    Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus']);
-    Route::post('/orders/{id}/payment-status', [OrderController::class, 'updatePaymentStatus']);
-    Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel']);
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('/orders', [OrderController::class, 'index']);
+        Route::get('/orders/{id}', [OrderController::class, 'show']);
+        Route::post('/orders', [OrderController::class, 'store']);
+        Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus']);
+        Route::post('/orders/{id}/payment-status', [OrderController::class, 'updatePaymentStatus']);
+        Route::post('/orders/{id}/cancel', [OrderController::class, 'cancel']);
+    });
 
     // Payment Routes
     Route::get('/payment-channels', [PaymentController::class, 'getPaymentChannels']);
